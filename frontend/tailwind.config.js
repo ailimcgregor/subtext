@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./public/**/*.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "input-field-gray": "#AAAFB4",
+      },
+    },
   },
   plugins: [],
 };
