@@ -1,2 +1,2 @@
-# pillpal
-TreeHacks 2024 pillpal project
+# subtext
+TreeHacks 2024 Emotive Captioning Software
