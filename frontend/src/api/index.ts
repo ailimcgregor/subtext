@@ -3,7 +3,7 @@ import { ResponseType } from "../types";
 
 const API = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
-  timeout: 30000,
+  timeout: 300000,
 });
 
 export const getResultsForYT = async (payload: any): Promise<ResponseType> => {
