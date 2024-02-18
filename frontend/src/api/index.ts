@@ -17,9 +17,7 @@ export const getResults = async (payload: any): Promise<any> => {
 
 export const getResultsForYT = async (payload: any): Promise<any> => {
   if (!payload?.url) {
-    const formData = new FormData();
-    formData.set("audio", payload);
-    const response = await API.post("", formData, {
+    const response = await API.post("", payload, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;

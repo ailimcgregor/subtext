@@ -30,13 +30,26 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="my-6 px-20 flex flex-col items-center">
-        <div className="font-semibold text-2xl">Use Cases:</div>
-        <div className="mt-10 flex flex-wrap justify-center">
+      <div className="my-10 px-20 flex flex-col items-center">
+        <div className="mt-10 flex justify-center">
+          <div
+            className="bg-gradient-to-r from-rw-blue to-rw-purple py-4 w-[450px] h-[450px] flex flex-col items-center justify-center m-4 rounded-lg cursor-pointer px-8"
+            onClick={() => {
+              window.location.href = "/entertainment";
+            }}
+          >
+            <div className="text-4xl text-white text-center">Entertainment</div>
+            <div className="flex flex-wrap justify-center gap-2">
+              <img src={Images.Television} className="w-20 mt-4" />
+            </div>
+          </div>
+        </div>
+        <div className="font-semibold text-2xl my-5">Other Use Cases:</div>
+        <div className="flex flex-wrap justify-center">
           {useCases.map((el) => {
             return (
               <div
-                className="bg-gradient-to-r from-rw-blue to-rw-purple py-4 w-[450px] flex flex-col items-center justify-center m-4 rounded-lg cursor-pointer px-8"
+                className="bg-gradient-to-r from-rw-blue to-rw-purple py-4 w-[450px] flex flex-col items-center justify-center mx-4 rounded-lg cursor-pointer px-8"
                 onClick={() => {
                   window.location.href = el.url;
                 }}
