@@ -17,14 +17,14 @@ export const getResults = async (payload: any): Promise<any> => {
 
 export const getResultsForYT = async (payload: any): Promise<any> => {
   if (!payload?.url) {
-    const response = await API.post("", payload, {
+    const response = await API.post("/analyze_youtube", payload, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
   } else {
     const formData = new FormData();
     formData.set("audio", payload?.file);
-    const response = await API.post("", formData, {
+    const response = await API.post("/analyze_audio", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
