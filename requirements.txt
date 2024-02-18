@@ -18,3 +18,7 @@ typing_extensions==4.9.0
 urllib3==2.2.0
 websockets==10.4
 Werkzeug==3.0.1
+pytube==15.0.0
+pydub==0.25.1
+openai==1.12.0
+python-dotenv==1.0.1
