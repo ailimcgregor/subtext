@@ -48,12 +48,6 @@ export default function FileInputRegion() {
           </div>
         </div>
       )}
-
-      <div className="flex justify-center mt-10">
-        <div className="w-96">
-          <Button text={"Input"} bgColor={"bg-blue-500"} onClick={() => {}} />
-        </div>
-      </div>
     </>
   );
 }
