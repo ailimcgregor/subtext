@@ -6,6 +6,11 @@ const API = axios.create({
 });
 
 export const getResults = async (payload: any): Promise<any> => {
-  const response = await API.post("");
+  const formData = new FormData();
+  formData.set("audio", payload);
+  const response = await API.post("", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
   return response.data;
 };

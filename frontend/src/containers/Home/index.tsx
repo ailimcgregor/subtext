@@ -30,14 +30,23 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="my-4 px-20 flex flex-col items-center">
+      <div className="my-6 px-20 flex flex-col items-center">
         <div className="font-semibold text-2xl">What can we use it for?</div>
-        <div className="mt-10  flex flex-wrap justify-center">
+        <div className="mt-10 flex flex-wrap justify-center">
           {useCases.map((el) => {
             return (
-              <div className="bg-gradient-to-r from-rw-blue to-rw-purple py-4 w-[450px] flex flex-col items-center justify-center m-4">
+              <div
+                className="bg-gradient-to-r from-rw-blue to-rw-purple py-4 w-[450px] flex flex-col items-center justify-center m-4 rounded-lg cursor-pointer px-8"
+                onClick={() => {
+                  window.location.href = el.url;
+                }}
+              >
                 <div className="text-4xl text-white text-center">{el.name}</div>
-                <img src={el.imgSrc} className="w-28 mt-4" />
+                <div className="flex flex-wrap justify-center gap-2">
+                  {el.imgSrc.map((src) => {
+                    return <img src={src} className="w-20 mt-4" />;
+                  })}
+                </div>
               </div>
             );
           })}

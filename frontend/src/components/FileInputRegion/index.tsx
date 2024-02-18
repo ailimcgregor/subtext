@@ -17,7 +17,6 @@ export default function FileInputRegion({ setParentState }: any) {
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className="text-2xl font-semibold">Input your file here!</div>
         <div className="mt-10" onClick={handleClick}>
           <div className="cursor-pointer border-dotted w-96 h-40 border-2 rounded-lg border-rw-gray flex justify-center items-center">
             <div className="text-sm font-semibold">Input your file here</div>

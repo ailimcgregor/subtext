@@ -4,21 +4,35 @@ import Button from "../../components/Button";
 import { getResults } from "../../api";
 import ResultRegion from "../../components/ResultRegion";
 import LoadingScreen from "../../components/LoadingScreen";
+import { useToast } from "@chakra-ui/react";
 
 export default function AudioFileContainer() {
   const [isLoading, setIsLoading] = useState(false);
-  const [state, setState] = useState<{ page: number; files: any }>({
-    page: 1,
+  const toast = useToast();
+  const [state, setState] = useState<{ files: any }>({
     files: null,
   });
   useEffect(() => {}, [isLoading]);
   const handleInputFile = async () => {
+    if (!state.files) {
+      toast({
+        title: "Error",
+        description: "Please verify your parameters.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
     await getResults(state.files);
     setIsLoading(true);
   };
   return (
     <div>
       <div className="p-20">
+        <div className="flex justify-center">
+          <div className="text-2xl font-semibold">Input your file here!</div>
+        </div>
         <FileInputRegion setParentState={setState} />
         <div className="flex justify-center mt-10">
           <div className="w-96">
@@ -28,9 +42,6 @@ export default function AudioFileContainer() {
               onClick={handleInputFile}
             />
           </div>
-        </div>
-        <div className="mt-10">
-          <ResultRegion />
         </div>
       </div>
       {isLoading ? <LoadingScreen /> : null}
