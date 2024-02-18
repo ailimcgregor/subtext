@@ -90,7 +90,7 @@ export default function ResultContainer() {
       )}
       {audioFile && (
         <div>
-          <audio controls className="w-1/2">
+          <audio controls className="w-[650px]">
             <source
               src={URL.createObjectURL(audioFile)}
               type={audioFile.type}
@@ -99,7 +99,7 @@ export default function ResultContainer() {
           </audio>
           <div
             style={{ color: state.color }}
-            className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 outline-2 text-xl w-[400px]`}
+            className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
           >
             {state.text}
           </div>
