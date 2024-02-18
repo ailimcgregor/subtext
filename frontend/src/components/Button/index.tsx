@@ -1,3 +1,5 @@
+import React from "react";
+
 type ButtonProps = {
   text: string;
   bgColor: string;

@@ -5,7 +5,26 @@
 @tailwind utilities;
 
 :root {
-  --font-family-sans-serif: "Inter", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-sans-serif: "Muoto 205tf", sans-serif;
+}
+
+@font-face {
+  font-family: "SFProDisplay";
+  src: url("./assets/fonts/SFProDisplay-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SFProDisplay";
+  src: url("./assets/fonts/SFProDisplay-Semibold.otf") format("opentype");
+  font-weight: 600; /* Adjust font-weight value as per your font's specification */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SFProDisplay";
+  src: url("./assets/fonts/SFProDisplay-Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
 }
