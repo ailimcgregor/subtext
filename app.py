@@ -16,8 +16,9 @@ CORS(app)
 def analyze_audio():
     if 'audio' not in request.files:
         return jsonify({'error': 'No audio file provided'}), 400
-
+    
     audio_file = request.files['audio']
+    print(audio_file)
     buffer = audio_file.read()
     audio_file.seek(0)
     audio_bytes = io.BytesIO(buffer)

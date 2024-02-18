@@ -32,7 +32,7 @@ export default function AudioFileContainer() {
         <div className="flex justify-center">
           <div className="text-2xl font-semibold">Input your file here!</div>
         </div>
-        <FileInputRegion setParentState={setState} />
+        <FileInputRegion setParentState={setState} parentState={state} />
         <div className="flex justify-center mt-10">
           <div className="w-96">
             <Button

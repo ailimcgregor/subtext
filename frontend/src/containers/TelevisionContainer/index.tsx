@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import FileInputRegion from "../../components/FileInputRegion";
 import LoadingScreen from "../../components/LoadingScreen";
-import { getResults, getResultsForYT } from "../../api";
+import { getResultsForYT } from "../../api";
 import { useToast } from "@chakra-ui/react";
 import { validateUrl } from "../../utils/validate";
 
@@ -51,6 +51,7 @@ export default function TelevisionContainer() {
           setIsLoading(false);
         }
       } else if (!state.url) {
+        console.log(state.files);
         setIsLoading(true);
         await getResultsForYT({ file: state.files });
         setIsLoading(false);
@@ -71,7 +72,7 @@ export default function TelevisionContainer() {
         />
         <div className="text-3xl mt-10">OR</div>
         <div className="" onClick={handleClick}>
-          <FileInputRegion setParentState={setState} />
+          <FileInputRegion setParentState={setState} parentState={state} />
         </div>
         <div className="flex justify-center mt-10">
           <div className="w-96">
