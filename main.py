@@ -1,4 +1,5 @@
 import base64
+import math
 from hume import HumeStreamClient
 from hume.models.config import ProsodyConfig
 from pydub import AudioSegment
@@ -61,7 +62,7 @@ colors = {'Determination': '#000000',
           'Relief': '#9ecdff',
           'Disgust': '#6b8338',
           'Envy': '#6b8338',
-          'Contempt': '#6b8338'}
+          'Contempt': '#9a0503'}
 
 
 def get_all_audio_segments(input_file_name):
@@ -93,7 +94,7 @@ def get_volume_of_each_segment(audio_file, segment_length_ms):
         segment = audio[start_time:end_time]
 
         # Extract just the speech portion (assuming it's in a certain range of frequencies)
-        speech_segment = segment.low_pass_filter(3000)
+        speech_segment = segment.low_pass_filter(5000)
 
         # Calculate the average volume level in decibels (dB)
         speech_volume = speech_segment.dBFS
@@ -109,7 +110,7 @@ def calculate_average_total_volume(audio_file):
     audio = AudioSegment.from_file(audio_file)
 
     # Extract just the speech portion (assuming it's in a certain range of frequencies)
-    speech = audio.low_pass_filter(3000)
+    speech = audio.low_pass_filter(5000)
 
     # Calculate the average volume level in decibels (dB)
     speech_volume = speech.dBFS
@@ -124,9 +125,9 @@ def get_all_chunk_volumes(audio_file):
     # Length of each segment in milliseconds (adjust as needed)
     segment_length_ms = 5000
     segment_volumes = get_volume_of_each_segment(audio_file, segment_length_ms)
-    # print("Speech volumes of each segment (dB):", segment_volumes)
-
-    # TODO: USE SEGMENT VOLUMES AND AVERAGE SPEECH VOLUMES TO CREATE A LIST OF CHUNKS AS SMALL NORMAL OR LARGE
+    #print("Speech volumes of each segment (dB):", segment_volumes)
+    
+    
 
 
 def get_chunk_color(first_emotion, second_emotion, third_emotion):
@@ -197,3 +198,24 @@ async def get_all_chunk_colors(api_key, audio_chunks):
             emotions.append(sorted_emotions_subset)
 
     return colors
+
+def match_segments_to_chunks(segments, colors):
+    matched_segments = {}
+    segment_num = 0
+    for segment in segments:
+        start = segment['start']
+        end = segment['end']
+        first_chunk = math.floor(start/3)
+        last_chunk = math.floor(end/3)
+        avg_chunk = math.floor((first_chunk + last_chunk)/2)
+        color = '#000000'
+        if (avg_chunk > len(colors) - 1):
+            color = colors[len(colors) - 1]
+        else:
+            color = colors[avg_chunk]
+        matched_segments [segment_num] = {'text': segment['text'], 'start': start, 'end': end, 'color': color} # add size later duhhhh
+        segment_num += 1
+    return matched_segments
+
+        
+
