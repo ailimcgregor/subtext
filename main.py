@@ -122,17 +122,21 @@ def calculate_average_total_volume(audio_file):
 
 def get_all_chunk_volumes(audio_file):
     avg_speech_volume = calculate_average_total_volume(audio_file)
-    # print("Avg file Speech volume (dB):", avg_speech_volume)
-    # print(avg_speech_volume)
 
-    # Length of each segment in milliseconds (adjust as needed)
     segment_length_ms = 3000
     segment_volumes = get_volume_of_each_segment(audio_file, segment_length_ms)
-    # print(segment_volumes)
-    # print("Speech volumes of each segment (dB):", segment_volumes)
 
-    # TODO: USE SEGMENT VOLUMES AND AVERAGE SPEECH VOLUMES TO CREATE A LIST OF CHUNKS AS SMALL NORMAL OR LARGE
-    return segment_volumes
+    volume_labels = []
+
+    for volume in segment_volumes:
+        print(volume)
+        if ((volume > avg_speech_volume + 3) or (volume < -28.5)):
+            volume_labels.append('small')
+        elif ((volume < avg_speech_volume - 1.5) or (volume > -22.5)):
+            volume_labels.append('large')
+        else:
+            volume_labels.append('regular')
+    return volume_labels
 
 
 def get_chunk_color(first_emotion, second_emotion, third_emotion):
@@ -205,7 +209,7 @@ async def get_all_chunk_colors(api_key, audio_chunks):
     return colors
 
 
-def match_segments_to_chunks(segments, colors):
+def match_segments_to_chunks(segments, colors, volumes):
     matched_segments = {}
     segment_num = 0
     for segment in segments:
@@ -213,14 +217,19 @@ def match_segments_to_chunks(segments, colors):
         end = segment['end']
         first_chunk = math.floor(start/3)
         last_chunk = math.floor(end/3)
-        avg_chunk = math.floor((first_chunk + last_chunk)/2)
+        mid_chunk = math.floor((first_chunk + last_chunk)/2)
         color = '#000000'
-        if (avg_chunk > len(colors) - 1):
+        volume = 'regular'
+        if (mid_chunk > len(colors) - 1):
             color = colors[len(colors) - 1]
         else:
-            color = colors[avg_chunk]
+            color = colors[mid_chunk]
+        if (mid_chunk > len(volumes) - 1):
+            volume = volumes[len(volumes) - 1]
+        else:
+            volume = volumes[mid_chunk]
         matched_segments[segment_num] = {
             # add size later duhhhh
-            'text': segment['text'], 'start': start, 'end': end, 'color': color}
+            'text': segment['text'], 'start': start, 'end': end, 'color': color, 'volume': volume}
         segment_num += 1
     return matched_segments
