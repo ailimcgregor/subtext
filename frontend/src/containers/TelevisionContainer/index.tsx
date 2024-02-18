@@ -2,12 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import FileInputRegion from "../../components/FileInputRegion";
 import LoadingScreen from "../../components/LoadingScreen";
-import { getResults } from "../../api";
+import { getResults, getResultsForYT } from "../../api";
+import { useToast } from "@chakra-ui/react";
+import { validateUrl } from "../../utils/validate";
 
 export default function TelevisionContainer() {
   const fileRef = useRef<any>();
-  const [state, setState] = useState<{ files: any }>({
+  const toast = useToast();
+
+  const [state, setState] = useState<{ files?: any; url?: string }>({
     files: null,
+    url: "",
   });
   const handleClick = () => {
     fileRef?.current?.click();
@@ -18,10 +23,39 @@ export default function TelevisionContainer() {
 
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {}, [isLoading]);
+
   const handleInputFile = async () => {
-    setIsLoading(true);
-    await getResults(state.files);
-    setIsLoading(false);
+    if (!state.files && !state.url) {
+      toast({
+        title: "Error",
+        description: "Please verify your parameters.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    } else if ((state.files && !state.url) || (!state.files && state.url)) {
+      if (!state.files) {
+        if (!validateUrl(state.url!)) {
+          toast({
+            title: "Error",
+            description: "Please verify your url",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+          return;
+        } else {
+          setIsLoading(true);
+          await getResultsForYT({ url: state.url });
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(true);
+        await getResultsForYT({ file: state.files });
+        setIsLoading(false);
+      }
+    }
   };
   return (
     <div className="w-full h-screen flex flex-col items-center ">
@@ -31,6 +65,9 @@ export default function TelevisionContainer() {
           type="text"
           placeholder="Youtube URL"
           className="py-4 px-6 rounded-lg border-2 border-rw-gray w-96 mt-10"
+          onChange={(event) => {
+            setState({ ...state, url: event?.target?.value });
+          }}
         />
         <div className="text-3xl mt-10">OR</div>
         <div className="" onClick={handleClick}>

@@ -14,3 +14,21 @@ export const getResults = async (payload: any): Promise<any> => {
 
   return response.data;
 };
+
+export const getResultsForYT = async (payload: any): Promise<any> => {
+  if (!payload?.url) {
+    const formData = new FormData();
+    formData.set("audio", payload);
+    const response = await API.post("", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } else {
+    const formData = new FormData();
+    formData.set("audio", payload?.file);
+    const response = await API.post("", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  }
+};

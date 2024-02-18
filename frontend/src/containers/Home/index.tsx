@@ -31,7 +31,7 @@ export default function Home() {
         </div>
       </div>
       <div className="my-6 px-20 flex flex-col items-center">
-        <div className="font-semibold text-2xl">What can we use it for?</div>
+        <div className="font-semibold text-2xl">Use Cases:</div>
         <div className="mt-10 flex flex-wrap justify-center">
           {useCases.map((el) => {
             return (

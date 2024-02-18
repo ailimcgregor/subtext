@@ -24,7 +24,6 @@ export default function AudioFileContainer() {
       });
       return;
     }
-    await getResults(state.files);
     setIsLoading(true);
   };
   return (
