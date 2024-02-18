@@ -79,7 +79,8 @@ def get_all_audio_segments(input_file_name):
 
 def get_volume_of_each_segment(audio_file, segment_length_ms):
     # Load the audio file
-    audio = AudioSegment.from_file(audio_file)
+    # audio = AudioSegment.from_file(audio_file)
+    audio = audio_file
 
     # Calculate the total number of segments
     num_segments = len(audio) // segment_length_ms
@@ -107,7 +108,8 @@ def get_volume_of_each_segment(audio_file, segment_length_ms):
 def calculate_average_total_volume(audio_file):
     "average audio volume"
     # Load the audio file
-    audio = AudioSegment.from_file(audio_file)
+    # audio = AudioSegment.from_file(audio_file)
+    audio = audio_file
 
     # Extract just the speech portion (assuming it's in a certain range of frequencies)
     speech = audio.low_pass_filter(5000)
@@ -121,13 +123,16 @@ def calculate_average_total_volume(audio_file):
 def get_all_chunk_volumes(audio_file):
     avg_speech_volume = calculate_average_total_volume(audio_file)
     # print("Avg file Speech volume (dB):", avg_speech_volume)
+    # print(avg_speech_volume)
 
     # Length of each segment in milliseconds (adjust as needed)
-    segment_length_ms = 5000
+    segment_length_ms = 3000
     segment_volumes = get_volume_of_each_segment(audio_file, segment_length_ms)
-    #print("Speech volumes of each segment (dB):", segment_volumes)
-    
-    
+    # print(segment_volumes)
+    # print("Speech volumes of each segment (dB):", segment_volumes)
+
+    # TODO: USE SEGMENT VOLUMES AND AVERAGE SPEECH VOLUMES TO CREATE A LIST OF CHUNKS AS SMALL NORMAL OR LARGE
+    return segment_volumes
 
 
 def get_chunk_color(first_emotion, second_emotion, third_emotion):
@@ -199,6 +204,7 @@ async def get_all_chunk_colors(api_key, audio_chunks):
 
     return colors
 
+
 def match_segments_to_chunks(segments, colors):
     matched_segments = {}
     segment_num = 0
@@ -213,9 +219,8 @@ def match_segments_to_chunks(segments, colors):
             color = colors[len(colors) - 1]
         else:
             color = colors[avg_chunk]
-        matched_segments [segment_num] = {'text': segment['text'], 'start': start, 'end': end, 'color': color} # add size later duhhhh
+        matched_segments[segment_num] = {
+            # add size later duhhhh
+            'text': segment['text'], 'start': start, 'end': end, 'color': color}
         segment_num += 1
     return matched_segments
-
-        
-
