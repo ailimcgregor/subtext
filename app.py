@@ -20,11 +20,12 @@ def analyze_audio():
     
     audio_chunks = list(get_audio_chunks(audio_data))
     
-    results = asyncio.run(send_audio_chunks(api_key, audio_chunks))
-
-    os.remove('temp_audio_file')
+    # results = asyncio.run(send_audio_chunks(api_key, audio_chunks))
     
-    return jsonify(results)
+    # return jsonify(results)
+
+    colors = asyncio.run(send_audio_chunks(api_key, audio_chunks))
+    return colors
 
 if __name__ == '__main__':
     app.run(debug=True)
