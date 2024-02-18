@@ -57,19 +57,8 @@ export default function ResultContainer() {
   return (
     <div className="w-full h-screen flex justify-center items-center">
       {url && (
-        <div className="grid grid-cols-2 gap-x-4">
-          <ReactPlayer
-            url={url}
-            config={{
-              youtube: {
-                playerVars: {
-                  cc_load_policy: 1,
-                },
-              },
-            }}
-            controls={true}
-          />
-          <div>
+        <div className="flex justify-center">
+          <div className="w-[650px]">
             <ReactPlayer
               url={url}
               onPlay={() => {
