@@ -7,11 +7,11 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col items-center">
-        <div className=" h-screen">
+        <div className="h-screen bg-black w-full">
           <div className="flex justify-center">
-            <img src={Images.Logo} className=" scale-125" />
+            <img src={Images.Logo} className="" />
           </div>
-          <div className="text-5xl mt-[-120px] font-semibold text-center flex justify-center">
+          <div className="text-5xl mt-[-100px] font-semibold text-center flex justify-center text-white">
             read the mood.
           </div>
         </div>

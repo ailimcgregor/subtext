@@ -1,4 +1,4 @@
-import Logo from "./logo.png";
+import Logo from "./logo.gif";
 import SoundWave from "./soundWave.png";
 import Television from "./television.png";
 import Deaf from "./deaf.png";
