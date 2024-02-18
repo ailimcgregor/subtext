@@ -5,26 +5,16 @@ const API = axios.create({
   timeout: 30000,
 });
 
-export const getResults = async (payload: any): Promise<any> => {
-  const formData = new FormData();
-  formData.set("audio", payload);
-  const response = await API.post("", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-
-  return response.data;
-};
-
 export const getResultsForYT = async (payload: any): Promise<any> => {
   if (!payload?.url) {
-    const response = await API.post("/analyze_youtube", payload, {
+    const response = await API.post("/analyze_audio", payload, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
   } else {
     const formData = new FormData();
     formData.set("audio", payload?.file);
-    const response = await API.post("/analyze_audio", formData, {
+    const response = await API.post("/analyze_youtube", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data;
