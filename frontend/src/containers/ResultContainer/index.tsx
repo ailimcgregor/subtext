@@ -4,32 +4,56 @@ import ReactPlayer from "react-player";
 import ReactAudioPlayer from "react-audio-player";
 import { ResponseType } from "../../types";
 import { delay } from "../../utils/common";
+import "./index.css";
 
 export default function ResultContainer() {
   const location = useLocation();
   const audioFile: any = location.state?.file;
   const url: any = location.state?.url;
   const data: ResponseType = location.state?.data;
-  const [readyToUpdate, setReadyToUpdate] = useState<boolean>(false);
-  const [state, setState] = useState<{ text: string; currIndex: number }>({
-    text: data[0].text,
+  const [state, setState] = useState<{
+    currIndex: number;
+    videoPaused: boolean;
+    text: string;
+    color: string;
+    data: any;
+  }>({
     currIndex: 0,
+    videoPaused: true,
+    text: data[0].text,
+    color: data[0].color,
+    data: location?.state?.data,
   });
-  const renderText = (data: ResponseType) => {};
+  const [timer, setTimer] = useState<number>(0);
+
   useEffect(() => {
-    const init = async () => {
-      if (setReadyToUpdate) {
-        setReadyToUpdate(false);
-        await delay(5000);
-        setState({
-          currIndex: state.currIndex + 1,
-          text: data[state.currIndex + 1].text,
+    if (!state.videoPaused) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer + 1); // Increment the timer by 1 second
+
+        // Find the appropriate data element based on the timer value
+      }, 1000);
+      if (!state.videoPaused) {
+        const element = Object.keys(data).find((key) => {
+          const { start, end } = data[key];
+          return end * 1000 > timer * 1000 && start * 1000 <= timer * 1000;
         });
-        setReadyToUpdate(true);
+
+        if (element) {
+          setState({
+            ...state,
+            text: data[element].text,
+            color: data[element].color,
+            currIndex: Number(element),
+          });
+        }
       }
-    };
-    init();
-  }, [readyToUpdate]);
+
+      // Cleanup function to clear the interval when the component unmounts
+      return () => clearInterval(interval);
+    }
+  }, [data, timer, state.videoPaused]); // Run this effect whenever data or timer changes
+
   return (
     <div className="w-full h-screen flex justify-center items-center">
       {url && (
@@ -46,11 +70,18 @@ export default function ResultContainer() {
             controls={true}
           />
           <div>
-            <ReactPlayer url={url} />
+            <ReactPlayer
+              url={url}
+              onPlay={() => {
+                setState({ ...state, videoPaused: false });
+              }}
+              onPause={() => {
+                setState({ ...state, videoPaused: true });
+              }}
+            />
             <div
-              className={`mt-10 rounded-lg border-2 border-rw-gray py-8 text-[${
-                data[state.currIndex].color
-              }]`}
+              style={{ color: state.color }}
+              className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
             >
               {state.text}
             </div>
@@ -58,10 +89,21 @@ export default function ResultContainer() {
         </div>
       )}
       {audioFile && (
-        <audio controls className="w-1/2">
-          <source src={URL.createObjectURL(audioFile)} type={audioFile.type} />
-          Your browser does not support the audio element.
-        </audio>
+        <div>
+          <audio controls className="w-1/2">
+            <source
+              src={URL.createObjectURL(audioFile)}
+              type={audioFile.type}
+            />
+            Your browser does not support the audio element.
+          </audio>
+          <div
+            style={{ color: state.color }}
+            className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 outline-2 text-xl w-[400px]`}
+          >
+            {state.text}
+          </div>
+        </div>
       )}
     </div>
   );
