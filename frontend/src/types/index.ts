@@ -4,5 +4,6 @@ export type ResponseType = {
     start: number;
     end: number;
     color: string;
+    volume: "large" | "small" | "regular";
   };
 };

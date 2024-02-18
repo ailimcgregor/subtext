@@ -17,12 +17,14 @@ export default function ResultContainer() {
     text: string;
     color: string;
     data: any;
+    volume: string;
   }>({
     currIndex: 0,
     videoPaused: true,
     text: data[0].text,
     color: data[0].color,
     data: location?.state?.data,
+    volume: data[0].volume,
   });
   const [timer, setTimer] = useState<number>(0);
 
@@ -69,8 +71,12 @@ export default function ResultContainer() {
               }}
             />
             <div
-              style={{ color: state.color }}
-              className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
+              style={{
+                color: state.color,
+                textTransform: state.volume === "large" ? "uppercase" : "none",
+                fontSize: state.volume === "small" ? "14px" : "16px",
+              }}
+              className={`mt-10 px-10 uppercase rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
             >
               {state.text}
             </div>
@@ -87,7 +93,11 @@ export default function ResultContainer() {
             Your browser does not support the audio element.
           </audio>
           <div
-            style={{ color: state.color }}
+            style={{
+              color: state.color,
+              textTransform: state.volume === "large" ? "uppercase" : "none",
+              fontSize: state.volume === "small" ? "14px" : "16px",
+            }}
             className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
           >
             {state.text}
