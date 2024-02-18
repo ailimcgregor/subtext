@@ -3,5 +3,6 @@ import { useSearchParams } from "react-router-dom";
 
 export default function ResultContainer() {
   const [searchParams] = useSearchParams();
-  return <div></div>;
+  const type = searchParams.get("type");
+  return <div>{type === ""}</div>;
 }

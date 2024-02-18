@@ -50,7 +50,7 @@ export default function TelevisionContainer() {
           await getResultsForYT({ url: state.url });
           setIsLoading(false);
         }
-      } else {
+      } else if (!state.url) {
         setIsLoading(true);
         await getResultsForYT({ file: state.files });
         setIsLoading(false);
