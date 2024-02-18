@@ -132,7 +132,7 @@ def get_all_chunk_volumes(audio_file):
         print(volume)
         if ((volume > avg_speech_volume + 3) or (volume < -28.5)):
             volume_labels.append('small')
-        elif ((volume < avg_speech_volume - 1.5) or (volume > -22.5)):
+        elif ((volume < avg_speech_volume - 3) or (volume > -22.5)):
             volume_labels.append('large')
         else:
             volume_labels.append('regular')
