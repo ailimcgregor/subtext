@@ -73,8 +73,9 @@ export default function ResultContainer() {
             <div
               style={{
                 color: state.color,
+                fontWeight: "700",
                 textTransform: state.volume === "large" ? "uppercase" : "none",
-                fontSize: state.volume === "small" ? "14px" : "16px",
+                fontSize: state.volume === "small" ? "14px" : "18px",
               }}
               className={`mt-10 px-10 uppercase rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
             >
@@ -95,8 +96,9 @@ export default function ResultContainer() {
           <div
             style={{
               color: state.color,
+              fontWeight: "700",
               textTransform: state.volume === "large" ? "uppercase" : "none",
-              fontSize: state.volume === "small" ? "14px" : "16px",
+              fontSize: state.volume === "small" ? "14px" : "18px",
             }}
             className={`mt-10 px-10 rounded-lg border-2 border-rw-gray py-8 text-3xl outlined-text w-[650px]`}
           >
