@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Button from "../../components/Button";
 import { DeleteIcon } from "@chakra-ui/icons";
 
-export default function FileInputRegion() {
+export default function FileInputRegion({ setParentState }: any) {
   const fileRef = useRef<any>();
   const [state, setState] = useState<{ files: any }>({
     files: null,
@@ -31,8 +31,9 @@ export default function FileInputRegion() {
         onChange={(event) => {
           console.log(event);
           setState({ ...state, files: event.target.files?.item(0) });
+          setParentState({ ...state, files: event.target.files?.item(0) });
         }}
-        accept="audio/*, .mp3"
+        accept="audio/*, flac, m4a, mp3, mp4, mpeg, mpga, oga, ogg, wav, webm"
         hidden
       />
 
