@@ -37,10 +37,15 @@ def analyze_audio():
         api_key, audio_chunks_for_colors))
 
     audio_phrase_segments = get_all_audio_segments(audio_bytes)
+    print(audio_phrase_segments)
+    print(colors)
+
     audio_chunk_volumes = get_all_chunk_volumes(audio_data)
 
+    print(audio_chunk_volumes)
+
     matched_text = match_segments_to_chunks(
-        audio_phrase_segments, colors)  # add sizes
+        audio_phrase_segments, colors, audio_chunk_volumes)  # add sizes
 
     return matched_text
 
@@ -78,9 +83,9 @@ def analyze_youtube():
     audio_bytes = io.BytesIO(buffer)
     audio_bytes.name = os.path.basename(filename)
     audio_phrase_segments = get_all_audio_segments(audio_bytes)
+    audio_chunk_volumes = get_all_chunk_volumes(audio_data)
 
-    matched_text = match_segments_to_chunks(
-        audio_phrase_segments, colors)  # add sizes
+    matched_text = match_segments_to_chunks(audio_phrase_segments, colors, audio_chunk_volumes)  # add sizes
 
     return matched_text
 
