@@ -1,6 +1,18 @@
 import base64
 from hume import HumeStreamClient
 from hume.models.config import ProsodyConfig
+from pydub import AudioSegment
+from pytube import YouTube
+import os
+import openai
+from typing import Final
+from dotenv import load_dotenv
+from io import BytesIO
+
+load_dotenv()
+OPEN_API_TOKEN: Final[str] = os.getenv('OPEN_API_TOKEN')
+openai.api_key = OPEN_API_TOKEN
+
 
 colors = {'Determination': '#000000', 
           'Concentration': '#000000', 
@@ -51,7 +63,70 @@ colors = {'Determination': '#000000',
           'Envy': '#6b8338',
           'Contempt': '#6b8338'}
 
-def chunk_color(first_emotion, second_emotion, third_emotion):
+def get_all_audio_segments(input_file_name):
+    #openai.OpenAI() below?
+   
+    transcript = openai.audio.transcriptions.create(
+        file=input_file_name,
+        model="whisper-1",
+        response_format="verbose_json",
+        timestamp_granularities=["segment"]
+    )
+    return transcript.segments
+
+
+def get_volume_of_each_segment(audio_file, segment_length_ms):
+    # Load the audio file
+    audio = AudioSegment.from_file(audio_file)
+
+    # Calculate the total number of segments
+    num_segments = len(audio) // segment_length_ms
+
+    # Initialize a list to store the speech volumes of each segment
+    segment_volumes = []
+
+    # Iterate over the audio and segment it
+    for i in range(num_segments):
+        start_time = i * segment_length_ms
+        end_time = (i + 1) * segment_length_ms
+        segment = audio[start_time:end_time]
+
+        # Extract just the speech portion (assuming it's in a certain range of frequencies)
+        speech_segment = segment.low_pass_filter(3000)
+
+        # Calculate the average volume level in decibels (dB)
+        speech_volume = speech_segment.dBFS
+
+        segment_volumes.append(speech_volume)
+
+    return segment_volumes
+
+
+def calculate_average_total_volume(audio_file):
+    "average audio volume"
+    # Load the audio file
+    audio = AudioSegment.from_file(audio_file)
+
+    # Extract just the speech portion (assuming it's in a certain range of frequencies)
+    speech = audio.low_pass_filter(3000)
+
+    # Calculate the average volume level in decibels (dB)
+    speech_volume = speech.dBFS
+
+    return speech_volume
+
+def get_all_chunk_volumes(audio_file):
+    avg_speech_volume = calculate_average_total_volume(audio_file)
+    #print("Avg file Speech volume (dB):", avg_speech_volume)
+
+    segment_length_ms = 5000  # Length of each segment in milliseconds (adjust as needed)
+    segment_volumes = get_volume_of_each_segment(audio_file, segment_length_ms)
+    #print("Speech volumes of each segment (dB):", segment_volumes)
+    
+    # TODO: USE SEGMENT VOLUMES AND AVERAGE SPEECH VOLUMES TO CREATE A LIST OF CHUNKS AS SMALL NORMAL OR LARGE
+
+
+def get_chunk_color(first_emotion, second_emotion, third_emotion):
     first_color = colors.get(first_emotion)
     second_color = colors.get(second_emotion)
     third_color = colors.get(third_emotion)
@@ -88,11 +163,11 @@ def chunk_color(first_emotion, second_emotion, third_emotion):
     return color
 
 
-def get_audio_chunks(audio, chunk_length_ms=5000):
+def get_all_audio_chunks(audio, chunk_length_ms=5000):
     for i in range(0, len(audio), chunk_length_ms):
         yield audio[i:i+chunk_length_ms]
 
-async def send_audio_chunks(api_key, audio_chunks):
+async def get_all_chunk_colors(api_key, audio_chunks):
     client = HumeStreamClient(api_key)
     config = ProsodyConfig()
     emotions = []
@@ -109,14 +184,10 @@ async def send_audio_chunks(api_key, audio_chunks):
             first_emotion = sorted_emotions_subset[0]['name']
             second_emotion = sorted_emotions_subset[1]['name']
             third_emotion = sorted_emotions_subset[2]['name']
-            print(first_emotion)
-            print(second_emotion)
-            print(third_emotion)
-            color = chunk_color(first_emotion, second_emotion, third_emotion)
+            color = get_chunk_color(first_emotion, second_emotion, third_emotion)
             colors.append(color)
 
             emotions.append(sorted_emotions_subset)
 
-    print(colors)
 
     return colors
