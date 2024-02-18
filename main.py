@@ -14,18 +14,18 @@ OPEN_API_TOKEN: Final[str] = os.getenv('OPEN_API_TOKEN')
 openai.api_key = OPEN_API_TOKEN
 
 
-colors = {'Determination': '#000000', 
-          'Concentration': '#000000', 
-          'Tiredness': '#000000', 
-          'Boredom': '#000000', 
-          'Awkwardness': '#000000', 
-          'Contemplation': '#000000', 
-          'Interest': '#000000', 
-          'Realization': '#000000', 
+colors = {'Determination': '#000000',
+          'Concentration': '#000000',
+          'Tiredness': '#000000',
+          'Boredom': '#000000',
+          'Awkwardness': '#000000',
+          'Contemplation': '#000000',
+          'Interest': '#000000',
+          'Realization': '#000000',
           'Calmness': '#000000',
-          'Anger': '#9a0503', 
-          'Contempt': '#9a0503', 
-          'Distress': '#9a0503', 
+          'Anger': '#9a0503',
+          'Contempt': '#9a0503',
+          'Distress': '#9a0503',
           'Surprise (negative)': '#8939a7',
           'Fear': '#8939a7',
           'Anxiety': '#8939a7',
@@ -63,9 +63,10 @@ colors = {'Determination': '#000000',
           'Envy': '#6b8338',
           'Contempt': '#6b8338'}
 
+
 def get_all_audio_segments(input_file_name):
-    #openai.OpenAI() below?
-   
+    # openai.OpenAI() below?
+
     transcript = openai.audio.transcriptions.create(
         file=input_file_name,
         model="whisper-1",
@@ -115,14 +116,16 @@ def calculate_average_total_volume(audio_file):
 
     return speech_volume
 
+
 def get_all_chunk_volumes(audio_file):
     avg_speech_volume = calculate_average_total_volume(audio_file)
-    #print("Avg file Speech volume (dB):", avg_speech_volume)
+    # print("Avg file Speech volume (dB):", avg_speech_volume)
 
-    segment_length_ms = 5000  # Length of each segment in milliseconds (adjust as needed)
+    # Length of each segment in milliseconds (adjust as needed)
+    segment_length_ms = 5000
     segment_volumes = get_volume_of_each_segment(audio_file, segment_length_ms)
-    #print("Speech volumes of each segment (dB):", segment_volumes)
-    
+    # print("Speech volumes of each segment (dB):", segment_volumes)
+
     # TODO: USE SEGMENT VOLUMES AND AVERAGE SPEECH VOLUMES TO CREATE A LIST OF CHUNKS AS SMALL NORMAL OR LARGE
 
 
@@ -141,10 +144,10 @@ def get_chunk_color(first_emotion, second_emotion, third_emotion):
 
     # essentially assigning 3 points to the first color, 2 to the second, and 1 to the third and tie breaking with 2 and 3
     color = 'Unknown'
-    
-    if(first_color == second_color):
-       color = first_color
-       if (color == 'Unknown'):
+
+    if (first_color == second_color):
+        color = first_color
+        if (color == 'Unknown'):
             color = third_color
     elif (first_color == third_color):
         color = first_color
@@ -159,7 +162,7 @@ def get_chunk_color(first_emotion, second_emotion, third_emotion):
 
     if (color == 'Unknown'):
         color = '#000000'
-    
+
     return color
 
 
@@ -167,27 +170,30 @@ def get_all_audio_chunks(audio, chunk_length_ms=5000):
     for i in range(0, len(audio), chunk_length_ms):
         yield audio[i:i+chunk_length_ms]
 
+
 async def get_all_chunk_colors(api_key, audio_chunks):
     client = HumeStreamClient(api_key)
     config = ProsodyConfig()
     emotions = []
     colors = []
-    
+
     async with client.connect([config]) as socket:
         for chunk in audio_chunks:
-            chunk_bytes = chunk.export(format="mp3", parameters=["-acodec", "mp3"], bitrate="128k")
+            chunk_bytes = chunk.export(format="mp3", parameters=[
+                                       "-acodec", "mp3"], bitrate="128k")
             encoded_chunk = base64.b64encode(chunk_bytes.read())
 
             result = await socket.send_bytes(encoded_chunk)
             emotions_subset = result['prosody']['predictions'][0]['emotions']
-            sorted_emotions_subset = sorted(emotions_subset, key=lambda x: x['score'], reverse=True)
+            sorted_emotions_subset = sorted(
+                emotions_subset, key=lambda x: x['score'], reverse=True)
             first_emotion = sorted_emotions_subset[0]['name']
             second_emotion = sorted_emotions_subset[1]['name']
             third_emotion = sorted_emotions_subset[2]['name']
-            color = get_chunk_color(first_emotion, second_emotion, third_emotion)
+            color = get_chunk_color(
+                first_emotion, second_emotion, third_emotion)
             colors.append(color)
 
             emotions.append(sorted_emotions_subset)
-
 
     return colors
